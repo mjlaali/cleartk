@@ -39,8 +39,6 @@ import org.cleartk.ml.jar.Train;
 import org.cleartk.test.util.DefaultTestBase;
 import org.junit.Test;
 
-import weka.classifiers.functions.Logistic;
-
 /**
  * Copyright (c) 2012, Regents of the University of Colorado <br>
  * All rights reserved.
@@ -123,7 +121,7 @@ public class WekaStringOutcomeClassifierTest extends DefaultTestBase {
     reader.close();
 
     HideOutput hider = new HideOutput();
-    Train.main(outputDirectoryName, Logistic.class.getName(), "-R 1.0E-8 -M -1");
+    Train.main(outputDirectoryName, "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1");
     hider.restoreOutput();
     WekaStringOutcomeClassifierBuilder builder = new WekaStringOutcomeClassifierBuilder();
     WekaStringOutcomeClassifier classifier = builder.loadClassifierFromTrainingDirectory(
@@ -219,7 +217,7 @@ public class WekaStringOutcomeClassifierTest extends DefaultTestBase {
     reader.close();
 
     HideOutput hider = new HideOutput();
-    Train.main(outputDirectoryName, Logistic.class.getName(), "-R 1.0E-8 -M -1");
+    Train.main(outputDirectoryName, "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1");
     hider.restoreOutput();
     WekaStringOutcomeClassifierBuilder builder = new WekaStringOutcomeClassifierBuilder();
     WekaStringOutcomeClassifier classifier = builder.loadClassifierFromTrainingDirectory(

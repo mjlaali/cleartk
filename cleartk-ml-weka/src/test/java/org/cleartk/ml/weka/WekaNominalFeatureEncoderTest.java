@@ -46,5 +46,5 @@ public class WekaNominalFeatureEncoderTest {
     wekaNominalFeatureEncoder.save(val);
     assertThat(wekaNominalFeatureEncoder.getSortedValues()).containsOnly(val);
   }
-
+  
 }

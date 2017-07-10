@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
 
@@ -35,7 +36,6 @@ import com.google.common.annotations.Beta;
 
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
-import weka.classifiers.trees.J48;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
@@ -56,6 +56,16 @@ public class WekaStringOutcomeClassifierBuilder extends
   public File getTrainingDataFile(File dir) {
     return new File(dir, TRAINING_FILE_NAME);
   }
+  
+  private static String[] parseWekaConfigs(String config) {
+    int clsNameEnd = config.indexOf(' ');
+    if (clsNameEnd == -1)
+      return new String[]{config};
+    
+    String clsName = config.substring(0, clsNameEnd);
+    String clsParams = config.substring(clsNameEnd + 1);
+    return new String[]{clsName, clsParams};
+  }
 
   @Override
   public void trainClassifier(File dir, String... args) throws Exception {
@@ -63,15 +73,14 @@ public class WekaStringOutcomeClassifierBuilder extends
     File modelFile = getModelFile(dir);
     String classifierCls;
     String options;
-    if (args.length > 0)
-      classifierCls = args[0];
-    else
-      classifierCls = J48.class.getName();
-
+    if (args == null || args.length == 0)
+      args = new String[]{"weka.classifiers.trees.J48 -C 0.25 -M 2"};
     if (args.length > 1)
-      options = args[1];
-    else
-      options = "";
+      throw new RuntimeException("Copy past all the config from Weka as one string." + Arrays.toString(args));
+    
+    String[] configs = parseWekaConfigs(args[0]);
+    classifierCls = configs[0];
+    options = configs[1];
 
     buildModelFromArffFile(arffFile, classifierCls, options, modelFile);
   }
